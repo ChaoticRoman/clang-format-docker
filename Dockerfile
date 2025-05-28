@@ -1,6 +1,6 @@
 ARG ALPINE_TAG=latest
 
-FROM alpine:${ALPINE_TAG} as builder
+FROM alpine:${ALPINE_TAG} AS builder
 
 ARG VERSION
 ARG BRANCH=release/${VERSION}.x
@@ -19,4 +19,7 @@ RUN set -x \
 
 FROM alpine:latest
 
+RUN apk add --no-cache python3 git
+
 COPY --from=builder /src/llvm/_build/bin/clang-format /usr/bin/
+COPY --from=builder /src/clang/tools/clang-format/clang-format-diff.py /usr/bin/clang-format-diff
